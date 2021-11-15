@@ -8,7 +8,7 @@ platform :ios do
         if version.nil?
             UI.user_error! "No tag found"
         end
-        unless git_tag_exists(tag: version, remote: true)  
+        unless git_tag_exists(tag: version, remote: true)
             UI.user_error! "Remote tag not found for version #{version}"
         end
 
@@ -21,7 +21,7 @@ platform :ios do
         end
         config = Config.read_current()
         carthage_config = CarthageConfig.new(config.framework)
-    
+
         sh "rm -f ../#{carthage_config.archive_name} || true"
         sh "rm -rf ../#{carthage_config.build_result} || true"
 
@@ -61,7 +61,7 @@ platform :ios do
             name: "#{version}",
             tag_name: version,
             description: message,
-            commitish: "develop",
+            commitish: "tv",
             upload_assets: ["#{carthage_config.framework}.xcframework"]
         )
     end
@@ -78,7 +78,7 @@ platform :ios do
         "Release #{new_version}\n\nDiff with previous:\n#{diff_link}\n\nCommit  | Details\n--------|------\n#{changelog}"
     end
 
-end 
+end
 
 class CarthageConfig
 
@@ -93,7 +93,7 @@ class CarthageConfig
     end
 
     def initialize(framework)
-        if framework.nil? 
+        if framework.nil?
               UI.user_error! "Invalid framework in config"
         end
         @framework = framework
@@ -109,7 +109,7 @@ class Version
         @major = major
         @minor = minor
         @patch = patch
-    end 
+    end
 
     def self.from_string(version_string)
         result = /^(\d+)\.(\d+)\.(\d+)$/.match(version_string)
@@ -131,7 +131,7 @@ class Version
         end
 
         Version.from_string(matches[:version])
-    end 
+    end
 
     def write
         contents = <<~EOS
@@ -146,7 +146,7 @@ class Version
             Version.new(@major + 1, 0, 0)
         elsif bump == "minor"
             Version.new(@major, @minor + 1, 0)
-        else 
+        else
             Version.new(@major, @minor, @patch + 1)
         end
     end
@@ -180,7 +180,7 @@ class Config
         File.readlines(CONFIG_FILE_PATH).each do |line|
             next if line.chomp.empty?
             items = line.split("=")
-            unless items.count == 2 
+            unless items.count == 2
                 UI.user_error! "Malformed config in #{CONFIG_FILE_PATH}"
             end
             values[items[0]] = items[1].strip()

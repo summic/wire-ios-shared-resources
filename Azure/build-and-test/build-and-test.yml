@@ -3,11 +3,11 @@ parameters:
 
 steps:
 - script: |
-    git clone --single-branch -b $BRANCH https://github.com/wireapp/wire-ios-shared-resources.git
+    git clone --single-branch -b $BRANCH https://github.com/summic/wire-ios-shared-resources.git
     mkdir -p fastlane
     cp wire-ios-shared-resources/Azure/build-and-test/Fastfile fastlane/Fastfile
   env:
-    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)   
+    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)
     BRANCH: ${{ parameters.branch }}
   displayName: "Prepare build scripts"
 
@@ -15,7 +15,7 @@ steps:
     sudo xcode-select -switch /Applications/Xcode_13.1.app
     carthage bootstrap --platform iOS --new-resolver --use-xcframeworks
   env:
-    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)   
+    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)
   displayName: "Setup environment"
 
 - script: |
@@ -61,8 +61,8 @@ steps:
 
 - script: |
     fastlane post_test
-  env:  
+  env:
     CODECOV_TOKEN: $(CODECOV_TOKEN)
-    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)   
+    GITHUB_ACCESS_TOKEN: $(GITHUB_ACCESS_TOKEN)
   displayName: "Post Test"
   continueOnError: true

@@ -3,11 +3,11 @@ pipeline {
     options {
         ansiColor('xterm')
     }
-    triggers { 
-        pollSCM('H 21 * * *') 
+    triggers {
+        pollSCM('H 21 * * *')
     }
     environment {
-        BRANCH = "develop"
+        BRANCH = "tv"
         LAST_COMMIT = ""
     }
     parameters {
@@ -31,7 +31,7 @@ pipeline {
                             [$class: 'LocalBranch', localBranch: '**'], // Unless this is specified, it simply checks out by commit SHA with no branch information
                             [$class: 'CleanBeforeCheckout'] // Resets untracked files, just to make sure we are clean
                         ],
-                        userRemoteConfigs: [[url: "git@github.com:wireapp/wire-ios.git"]]
+                        userRemoteConfigs: [[url: "git@github.com:summic/wire-ios.git"]]
                     ])
 
                     LAST_COMMIT = scmVars.GIT_PREVIOUS_COMMIT ?: ""
@@ -41,11 +41,11 @@ pipeline {
         stage ("Trigger build") {
             steps {
                 build(
-                    job: 'client-ios-build-pipeline', 
+                    job: 'client-ios-build-pipeline',
                     parameters: [
-                        string(name: 'xcode_version', value: xcode_version), 
-                        string(name: 'branch_to_build', value: BRANCH), 
-                        string(name: 'BUILD_TYPE', value: 'Internal'), 
+                        string(name: 'xcode_version', value: xcode_version),
+                        string(name: 'branch_to_build', value: BRANCH),
+                        string(name: 'BUILD_TYPE', value: 'Internal'),
                         string(name: 'build_number_override', value: env.BUILD_NUMBER),
                         string(name: 'last_commit_for_changelog', value: LAST_COMMIT)
                     ]
@@ -54,4 +54,3 @@ pipeline {
         }
     }
 }
-

@@ -12,7 +12,7 @@ pipeline {
     options {
         ansiColor('xterm')
     }
-    environment { 
+    environment {
         // This is where the misc configuration files (e.g. Gemfile) are fetched from. When testing swap out the branch
         DEPENDENCIES_BASE_URL = "https://raw.githubusercontent.com/wireapp/wire-ios-shared-resources/master"
         // For command line tools to be able to access API we set there env vars to values from Jenkins credentials store
@@ -45,8 +45,8 @@ pipeline {
     parameters {
         string(defaultValue: "develop", description: 'Branch to use', name: 'branch_to_build')
         choice(
-            choices: ["Playground", "Development", "Internal", "AVS", "RC"], 
-            description: 'Type of build', 
+            choices: ["Playground", "Development", "Internal", "AVS", "RC"],
+            description: 'Type of build',
             name: "BUILD_TYPE"
         )
         string(defaultValue: "", description: 'Version of AVS to use, only relevant for AVS build', name: 'avs_version')
@@ -58,7 +58,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Let's check if we are overriding the app build number 
+                // Let's check if we are overriding the app build number
                 script {
                     if ("${build_number_override}" != '') {
                         BUILD_NUMBER = "${build_number_override}"
@@ -74,7 +74,7 @@ pipeline {
                         [$class: 'CleanBeforeCheckout'], // Resets untracked files, just to make sure we are clean
                         [$class: 'CloneOption', timeout: 60] // Timeout after 1 hour
                     ],
-                    userRemoteConfigs: [[url: "git@github.com:wireapp/wire-ios.git"]]
+                    userRemoteConfigs: [[url: "git@github.com:summic/wire-ios.git"]]
                 ])
 
             }
@@ -92,7 +92,7 @@ pipeline {
 		                            [$class: 'LocalBranch', localBranch: '**'], // Unless this is specified, it simply checks out by commit SHA with no branch information
 		                            [$class: 'CleanBeforeCheckout'] // Resets untracked files, just to make sure we are clean
 		                        ],
-		                        userRemoteConfigs: [[url: "git@github.com:wireapp/wire-ios-build-assets.git"]]
+		                        userRemoteConfigs: [[url: "git@github.com:summic/wire-ios-build-assets.git"]]
 		                    ])
 		                }
 		            }
@@ -148,7 +148,7 @@ pipeline {
                 """
             }
         }
-        
+
         stage("QA: build for simulator") {
             steps {
                 sh """#!/bin/bash -l
